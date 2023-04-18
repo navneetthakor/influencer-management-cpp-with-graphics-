@@ -2,6 +2,7 @@
 #include<graphics.h>
 #include<fstream>
 #include<stdlib.h>
+#include<vector>
 using namespace std;
 char* arr[5]={"Insert","Delete","Find","Modify","Exit"};
 
@@ -12,10 +13,10 @@ class influencers
     char name[20];
     char email[20];
     float due;
-    float gains;
 
 public:
-    char *ret_inf_id()
+    float gains;
+    char* ret_inf_id()
     {
         return id;
     }
@@ -55,33 +56,54 @@ public:
         file.close();
     }
 
-    void show_details()
-    {
+    void modify(){
         influencers inf;
-        int flag=0;
-        char sid[5];
-        cout<<"Enter id to search : ";
+        char sid[5] ,a[5],b[20],c[20];
+        float d,e;
+        int x;
+        // int infsize = sizeof(inf);
+        cout<<"Enter influencer id to modify : ";
         cin>>sid;
         fstream file;
-        file.open("influencers.txt", ios::in | ios::out | ios::ate);
+        file.open("influencers.txt", ios::in|ios::out|ios::ate);
         file.seekg(0);
-        while (file.read((char *)&inf, sizeof(inf)))
-        {
-            if (strcmp(sid, inf.id) == 0)
+            while (file.read((char *)&inf, sizeof(inf)))
             {
-                cout << endl;
-                cout << "id :" << inf.id << endl;
-                cout << "name :" << inf.name << endl;
-                cout << "email :" << inf.email << endl;
-                cout << "due :" << inf.due << endl;
-                cout << "gains :" << inf.gains << endl;
-                flag=1;
+                if (strcmp(sid, inf.id) == 0)
+                {
+                    cout<<"Enter id : ";
+                    cin>>a;
+                    cout<<"Enter name : ";
+                    cin>>b;
+                    cout<<"Enter email : ";
+                    cin>>c;
+                    cout<<"Enter due : ";
+                    cin>>d;
+                    cout<<"Enter gains : ";
+                    cin>>e;
+                    strcpy(inf.id,a);
+                    strcpy(inf.name,b);
+                    strcpy(inf.email,c);
+                    inf.due=d;
+                    inf.gains=e;
+
+                    file.seekp(file.tellg() - sizeof(inf));
+                    file.write((char*)&inf, sizeof(inf));
+                }
             }
-        }
-        if(flag==0){
-            cout<<"No such influencer found.\n";
-        }
         file.close();
+    }
+
+    void show_details()
+    {
+       
+                cout << endl;
+                cout << "id :" << id << endl;
+                cout << "name :" << name << endl;
+                cout << "email :" << email << endl;
+                cout << "due :" << due << endl;
+                cout << "gains :" << gains << endl;
+                
     }
 
     void search_influencer()
@@ -117,6 +139,118 @@ public:
     file.close();
      
     }
+
+     void delete1(){
+        influencers inf;
+        char sid[5] ,a[5],b[20],c[20];
+        float d,e;
+        int x;
+        cout<<"Enter influencer id to deleted : ";
+        cin>>sid;
+        fstream file;
+        file.open("influencers.txt", ios::in|ios::out|ios::ate);
+        file.seekg(0);
+            while (file.read((char *)&inf, sizeof(inf)))
+            {
+                if (strcmp(sid, inf.id) == 0)
+                {
+                    strcpy(inf.id,"");
+                    strcpy(inf.name,"");
+                    strcpy(inf.email,"");
+                    inf.due=0;
+                    inf.gains=0;
+
+                    file.seekp(file.tellg() - sizeof(inf));
+                    file.write((char*)&inf, sizeof(inf));
+                }
+            }
+            cout<<"deleted successfully"<<endl;
+        file.close();
+    }
+    
+//    print all influencers
+	void displayinf()
+	{
+		influencers inf;
+	    fstream file;
+        file.open("influencers.txt", ios::in|ios::out|ios::ate);
+        file.seekg(0);	
+        while (file.read((char *)&inf, sizeof(inf)))
+            {
+                inf.show_details();
+            }
+        file.close();
+	}
+	
+//	find max 
+	void max(){
+        influencers inf;
+        fstream file;
+        int i=0;
+        vector<float> arr;
+        file.open("influencers.txt",ios::in|ios::out|ios::ate);
+        file.seekg(0);
+        while(file){
+        	file.read((char *)&inf,sizeof(inf));
+            arr.push_back(inf.gains);
+        }
+         file.close();
+        
+        float big=arr[0];                        
+        for(int j=0;j<arr.size();j++){
+            for(int k=j+1;k<arr.size();k++){
+                if(big<arr[k]){
+                    big=arr[k];
+                }
+            }
+        }
+        
+        ifstream file1("influencers.txt");
+        cout<<big<<" ";
+        file.seekg(0);
+        while(file1){
+        	file1.read((char *)&inf,sizeof(inf));
+            if(big == inf.gains){
+            	inf.show_details();
+			}
+        }
+       
+    }
+    
+    //	find min 
+	void min(){
+        influencers inf;
+        fstream file;
+        int i=0;
+        vector<float> arr;
+        file.open("influencers.txt",ios::in|ios::out|ios::ate);
+        file.seekg(0);
+        while(file){
+        	file.read((char *)&inf,sizeof(inf));
+            arr.push_back(inf.gains);
+        }
+         file.close();
+        
+        float big=arr[0];                        
+        for(int j=0;j<arr.size();j++){
+            for(int k=j+1;k<arr.size();k++){
+                if(big>arr[k]){
+                    big=arr[k];
+                }
+            }
+        }
+        
+        ifstream file1("influencers.txt");
+        cout<<big<<" ";
+        file.seekg(0);
+        while(file1){
+        	file1.read((char *)&inf,sizeof(inf));
+            if(big == inf.gains){
+            	inf.show_details();
+			}
+        }
+       
+    }
 };
 
 class clients
@@ -125,51 +259,63 @@ class clients
     float package;
 
 public:
-    void add_client()
+   void add_client()
     {
-        char *sid;
-        bool exists;
+        // takking details of client 
+        cout << "Enter client name : ";
+        cin >> client_name;
+        cout << "Enter package : ";
+        cin >> package;
+
+        char sid[5];
+        bool exists=false;
+        int flag= 1;
         cout << "Enter influencer id to add client : ";
         cin >> sid;
 
         influencers temp_inf;
         fstream file;
-        file.open("influencers.txt", ios::in);
+        file.open("influencers.txt", ios::in | ios::out | ios::ate);
         file.seekg(0, ios::beg);
-        while (file.read((char *)&temp_inf, sizeof(temp_inf)))
+        while (file)
         {
-            if (strcmp(sid, temp_inf.ret_inf_id()) == 0)
+            file.read((char *)&temp_inf, sizeof(temp_inf));
+            if (strcmp(sid, temp_inf.ret_inf_id()) == 0 && flag)
             {
                 exists = true;
+                temp_inf.gains += package;
+                flag = 0;
+
+                file.seekp(file.tellg() - sizeof(temp_inf));
+                file.write((char*)&temp_inf, sizeof(temp_inf));
+                temp_inf.show_details();
             }
         }
         if (exists)
         {
-            cout << "Enter client name : ";
-            cin >> client_name;
-            cout << "Enter package : ";
-            cin >> package;
+            // adding client in file 
+            ofstream clf("clients.txt");
+            clf.write((char*)&(*this),sizeof(*this));
+            clf.close();
             cout << "Added client " << client_name << " to Influencer : " << temp_inf.ret_inf_name() << endl;
         }
         else
         {
             cout << "Wrong influencer credentials.\n";
-            exists = false;
+            cout<<endl<<"client not added "<<endl;
         }
-        file.close();
+           file.close();
     }
 };
 
 
 
-
-    // to create rectangle of menubar 
+// to create rectangle of menubar 
 void setrect(){
 	setcolor(10);
     for(int i=0;i<5;i++)
 	rectangle(80-i,110-i,560+i,200+i);
     }
-
 
 
 
@@ -216,23 +362,11 @@ void creategp(){
 //    putting text below menubar
 	outtextxy(80,240,"Press 1: To find top performer");
 	outtextxy(80,260,"Press 2: To find worst performer");
-	outtextxy(80,280,"Press 3: To Add Client");
-
+	outtextxy(80,280,"Press 3: To show all the Influencers.");
+	outtextxy(80,300,"Press 4: To Add Client");
 
 }
 
-
-
-
-
-// sample functions
-void insert(){
-	cout<<"Insert"<<endl;
-}
-
-void delete1(){
-	cout<<"Delete"<<endl;
-}
 
 
 
@@ -259,6 +393,7 @@ int main(){
 	creategp();
 	
     influencers i1;
+    clients c1;
 
     
      int i=0;
@@ -292,27 +427,27 @@ int main(){
     	if(i==0){
     		closegraph();
     		i1.add_influencer();
-    		delay(2000);
+    		delay(3000);
     		creategp();
 		}
 		else if(i==1){
 			closegraph();
-    		delete1();
-    		delay(2000);
+    		i1.delete1();
+    		delay(3000);
     		creategp();
 		}
 		else if(i==2)
 		{
 			closegraph();
 			i1.search_influencer();
-			delay(2000);
+			delay(5000);
 			creategp();
 		}
 		else if(i==3)
 		{
 			closegraph();
-			i1.show_details();
-			delay(2000);
+			i1.modify();
+			delay(3000);
 			creategp();
 		}
 		else if(i==4)
@@ -324,22 +459,29 @@ int main(){
 	else if(ch==49)
 		{
 			closegraph();
-			cout<<"1 pressed ";
-			delay(2000);
+			i1.min();
+			delay(5000);
 			creategp();
 		}
 		else if(ch==50)
 		{
 			closegraph();
-		    cout<<"2 pressed";
-		    delay(2000);
+		    i1.max();
+		    delay(5000);
 		    creategp();
 		}
 		else if(ch==51)
 		{
 			closegraph();
-		    cout<<"3 pressed";
-		    delay(2000);
+		    i1.displayinf();
+		    delay(5000);
+		    creategp();
+		}
+		else if(ch==52)
+		{
+			closegraph();
+		    c1.add_client();
+		    delay(5000);
 		    creategp();
 		}
  }

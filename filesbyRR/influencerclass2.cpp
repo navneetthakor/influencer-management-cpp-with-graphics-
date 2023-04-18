@@ -9,9 +9,9 @@ class influencers
     char name[20];
     char email[20];
     float due;
-    float gains;
 
 public:
+    float gains;
     char *ret_inf_id()
     {
         return id;
@@ -104,6 +104,38 @@ public:
             }
     file.close();
     }
+
+    void max(){
+        influencers inf;
+        fstream file;
+        int i=0;
+        vector<float> arr;
+        file.open("influencers.txt",ios::in|ios::out|ios::ate);
+        file.seekg(0);
+        while(file.read((char *)&inf,sizeof(inf))){
+            arr.push_back(inf.gains);
+        }
+        float big=arr[0];            
+        float small=arr[0];            
+        for(int j=0;j<i;j++){
+            for(int k=j+1;k<i;k++){
+                if(big<arr[k]){
+                    big=arr[k];
+                }
+                if(small>arr[k]){
+                    small=arr[k];
+                }
+            }
+        }
+        cout<<big<<" "<<small;
+        file.seekg(0);
+        while(file.read((char *)&inf,sizeof(inf))){
+            if(big == inf.gains){
+                inf.show_details();
+            }
+        }
+        file.close();
+    }
 };
 
 class clients
@@ -114,36 +146,51 @@ class clients
 public:
     void add_client()
     {
+        // takking details of client 
+        cout << "Enter client name : ";
+        cin >> client_name;
+        cout << "Enter package : ";
+        cin >> package;
+
         char *sid;
-        bool exists;
+        bool exists=false;
+        int flag= 1;
         cout << "Enter influencer id to add client : ";
         cin >> sid;
 
         influencers temp_inf;
         fstream file;
-        file.open("influencers.txt", ios::in);
+        file.open("influencers.txt", ios::in | ios::ate);
         file.seekg(0, ios::beg);
         while (file.read((char *)&temp_inf, sizeof(temp_inf)))
         {
-            if (strcmp(sid, temp_inf.ret_inf_id()) == 0)
+            if (strcmp(sid, temp_inf.ret_inf_id()) == 0 && flag)
             {
                 exists = true;
+                temp_inf.gains += package;
+                flag = 0;
             }
         }
         if (exists)
         {
-            cout << "Enter client name : ";
-            cin >> client_name;
-            cout << "Enter package : ";
-            cin >> package;
+            // adding client in file 
+            ofstream clf("client.txt");
+            clf.write((char*)&(*this),sizeof(*this));
+            clf.close();
             cout << "Added client " << client_name << " to Influencer : " << temp_inf.ret_inf_name() << endl;
+
+            // modifying influencer
+           flag =  file.tellg();
+           flag -= sizeof(temp_inf);
+           file.seekp(flag,ios::beg);
+           file.write((char*)&(temp_inf),sizeof(temp_inf));
+        file.close();
         }
         else
         {
             cout << "Wrong influencer credentials.\n";
-            exists = false;
+            cout<<endl<<"client not added "<<endl;
         }
-        file.close();
     }
 };
 
