@@ -298,6 +298,18 @@ int main(){
 			closegraph();
 			return 0;
 		}	
+        else if(i==49)
+		{
+			closegraph();
+			cout<<"1 pressed ";
+			creategp();
+		}
+		else if(i==50)
+		{
+			closegraph();
+		    cout<<"2 pressed";
+		    creategp();
+		}
 	}
  }
     
