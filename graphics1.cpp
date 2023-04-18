@@ -104,12 +104,25 @@ int main(){
             reversevideo(i);
         break;
         
-        case 13:
-        	insert();
-        	break;
-
-        }  
+        }
+        
     }
+    else if(ch==13){
+    	if(i==0){
+    		insert();
+		}
+		else if(i==1){
+			closegraph();
+    		delete1();
+		}
+		else if(i==4)
+		{
+			closegraph();
+		}
+		else{
+			
+		}	
+	}
  }
     
     
