@@ -30,7 +30,7 @@ public:
         return name;
     }
 
-    void add_influencer()
+   void add()
     {
         cout << "Enter influencer id : ";
         cin >> id;
@@ -40,7 +40,19 @@ public:
         cin >> email;
         cout << "Enter due amount : ";
         cin >> due;
+        cout<<endl;
         gains = 0;
+    }
+
+    void add_influencer()
+    {
+        add();
+        fstream file;
+        file.open("influencers.txt", ios::in | ios::out | ios::ate);
+        file.clear();
+        file.seekp(0,ios::end);
+        file.write((char *)&(*this), sizeof(*this));
+        file.close();
     }
 
     void show_details()
@@ -89,12 +101,21 @@ public:
                     cout << "Yes.. The influencer exists.\n";
                     chances = 0;
                     flag=1;
+                    
+//                    showing data
+					cout << endl;
+                cout << "id :" << inf.id << endl;
+                cout << "name :" << inf.name << endl;
+                cout << "email :" << inf.email << endl;
+                cout << "due :" << inf.due << endl;
+                cout << "gains :" << inf.gains << endl;
                 }
             }
             if(flag!=1){
                 cout<<"Influencer not found.\n";
             }
     file.close();
+     
     }
 };
 
@@ -195,6 +216,7 @@ void creategp(){
 //    putting text below menubar
 	outtextxy(80,240,"Press 1: To find top performer");
 	outtextxy(80,260,"Press 2: To find worst performer");
+	outtextxy(80,280,"Press 3: To Add Client");
 
 
 }
@@ -251,9 +273,9 @@ int main(){
            normalvideo(i);
            if(i==0)
             i=5;
-        i--;
-        reversevideo(i);
-        break;
+           i--;
+           reversevideo(i);
+           break;
 
          case 77:
             normalvideo(i);
@@ -261,7 +283,7 @@ int main(){
             i=-1;
             i++;
             reversevideo(i);
-        break;
+            break;
         
         }
         
@@ -297,7 +319,7 @@ int main(){
 		{
 			closegraph();
 			return 0;
-		}
+		}	
 	}
 	else if(ch==49)
 		{
@@ -310,6 +332,13 @@ int main(){
 		{
 			closegraph();
 		    cout<<"2 pressed";
+		    delay(2000);
+		    creategp();
+		}
+		else if(ch==51)
+		{
+			closegraph();
+		    cout<<"3 pressed";
 		    delay(2000);
 		    creategp();
 		}
