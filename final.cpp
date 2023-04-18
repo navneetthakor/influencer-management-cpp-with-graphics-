@@ -297,20 +297,22 @@ int main(){
 		{
 			closegraph();
 			return 0;
-		}	
-        else if(i==49)
+		}
+	}
+	else if(ch==49)
 		{
 			closegraph();
 			cout<<"1 pressed ";
+			delay(2000);
 			creategp();
 		}
-		else if(i==50)
+		else if(ch==50)
 		{
 			closegraph();
 		    cout<<"2 pressed";
+		    delay(2000);
 		    creategp();
 		}
-	}
  }
     
     
