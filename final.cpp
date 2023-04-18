@@ -234,7 +234,9 @@ void reversevideo(int i)
 
 // main funciton 
 int main(){
-    
+	creategp();
+	
+    influencers i1;
 
     
      int i=0;
@@ -266,18 +268,35 @@ int main(){
     }
     else if(ch==13){
     	if(i==0){
-    		insert();
+    		closegraph();
+    		i1.add_influencer();
+    		delay(2000);
+    		creategp();
 		}
 		else if(i==1){
 			closegraph();
     		delete1();
+    		delay(2000);
+    		creategp();
+		}
+		else if(i==2)
+		{
+			closegraph();
+			i1.search_influencer();
+			delay(2000);
+			creategp();
+		}
+		else if(i==3)
+		{
+			closegraph();
+			i1.show_details();
+			delay(2000);
+			creategp();
 		}
 		else if(i==4)
 		{
 			closegraph();
-		}
-		else{
-			
+			return 0;
 		}	
 	}
  }
@@ -285,7 +304,7 @@ int main(){
     
     
     
-    delay(500000);
+    delay(5000000);
 	
 	return 0;
 }
